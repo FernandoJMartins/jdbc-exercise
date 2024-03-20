@@ -17,7 +17,7 @@ public class Program {
 		System.out.println(seller);
 
 		
-		System.out.println("---------------------");
+		System.out.println("----------TEST 2----------------");
 		
 		
 		Department dept = new Department(2,null);
@@ -25,6 +25,15 @@ public class Program {
 		
 		for (Seller s : list) {
 			System.out.println(s);
+		}
+		System.out.println("----------TEST 3----------------");
+
+		
+		list = sd.findAll();
+		
+		for (Seller sl : list) {
+			System.out.println(sl);
+			
 		}
 	}
 }
