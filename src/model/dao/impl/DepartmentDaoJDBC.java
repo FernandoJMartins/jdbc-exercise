@@ -20,6 +20,16 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 		this.c = c;
 	}
 	
+	private Department initiateDep(ResultSet rs) throws SQLException{
+		Department dep = new Department();
+		dep.setId((rs.getInt("Id")));
+		dep.setName(rs.getString("Name"));
+		return dep;
+	}
+	
+	
+	
+	
 	@Override
 	public void insert(Department d) {
 		PreparedStatement st = null;
@@ -70,8 +80,27 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 
 	@Override
 	public Department findById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = c.prepareStatement("Select * from department d "
+					+ "where d.id = ?");
+			
+			st.setInt(1, id);
+			rs = st.executeQuery();
+			if (rs.next()) {
+				Department dep = initiateDep(rs);
+				return dep;
+			}
+			return null;
+		}
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeConnection();
+			DB.closeResultSet(rs);
+		}
 	}
 
 
