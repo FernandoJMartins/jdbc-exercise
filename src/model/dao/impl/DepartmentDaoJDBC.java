@@ -22,7 +22,7 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 	
 	private Department initiateDep(ResultSet rs) throws SQLException{
 		Department dep = new Department();
-		dep.setId((rs.getInt("Id")));
+		dep.setId(rs.getInt("Id"));
 		dep.setName(rs.getString("Name"));
 		return dep;
 	}
@@ -66,7 +66,23 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 
 	@Override
 	public void update(Department d) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
+		try {
+			st = c.prepareStatement("UPDATE DEPARTMENT "
+					+ "Set Name = ? "
+					+ "where id = ?", Statement.RETURN_GENERATED_KEYS);
+		
+		st.setString(1, d.getName());
+		st.setInt(2, d.getId());
+		
+		st.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+		}
 		
 	}
 
@@ -110,7 +126,7 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 			throw new DbException(e.getMessage());
 		}
 		finally {
-			DB.closeConnection();
+			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
 	}
